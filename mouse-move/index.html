@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="g-animation block">
+        The customizable Vue 3 component bringing interactivity to flowcharts and graphs. 
+    </div>
+
+    <div class="g-animation circle">
+        Read The Documentation 
+    </div>
+
+    <div id="g-pointer-1"></div>
+    <div id="g-pointer-2"></div>
+</body>
+<script>
+setTimeout(() => {
+    const body = document.querySelector("body");
+    const element = document.getElementById("g-pointer-1");
+    const element2 = document.getElementById("g-pointer-2");
+    const halfAlementWidth = element.offsetWidth / 2;
+    const halfAlementWidth2 = element2.offsetWidth / 2;
+
+
+    // 控制经过元素
+    let isHovering = false;
+    window.addEventListener("mouseover", (event) => {
+        const target = event.target;
+
+        if (target.classList.contains("g-animation")) {
+            isHovering = true
+
+            const rect = target.getBoundingClientRect()
+            const style = window.getComputedStyle(target)
+
+            element2.style.width = `${rect.width + 20}px`
+            element2.style.height = `${rect.height + 20}px`
+            element2.style.borderRadius = `${style.borderRadius}`
+            element2.style.transform = `translate(${rect.left - 10}px, ${rect.top - 10}px)`
+        }
+    });
+
+    window.addEventListener("mouseout", (event) => {
+        const target = event.target;
+        if (target.classList.contains("g-animation")) {
+            isHovering = false;
+
+            element2.style.width = `42px`;
+            element2.style.height = `42px`;
+            element2.style.borderRadius = `50%`;
+        }
+    });
+
+    // 鼠标移动效果
+    body.addEventListener("mousemove", (e) => {
+        window.requestAnimationFrame(function () {
+            setPosition(e.clientX, e.clientY);
+        });
+    });
+
+    function setPosition(x, y) {
+        window.requestAnimationFrame(function () {
+            element.style.transform = `translate(${x - halfAlementWidth}px, ${
+                y - halfAlementWidth
+            }px)`;
+
+            if (!isHovering) {
+                element2.style.transform = `translate(${x - halfAlementWidth2}px, ${
+                    y - halfAlementWidth2
+                }px)`;
+            }
+        });
+    }
+}, 20)
+</script>
+<style>
+body {
+    position: relative;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0;
+    cursor: none;
+    background: #fff;
+}
+.block {
+    padding: 10px;
+    display: inline-block;
+    border-radius: 10px;
+    background-color: #4caf50;
+    width: 200px;
+}
+.circle {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin-top: 50px;
+    background-color: #ff6700;
+}
+
+#g-pointer-1,
+#g-pointer-2
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background: #999;
+    border-radius: 50%;
+    background-color: #4caf50;
+    z-index: 1;
+    mix-blend-mode: exclusion;
+    pointer-events: none;
+}
+#g-pointer-2 {
+    width: 42px;
+    height: 42px;
+    background: #fff;
+    transition: .15s ease-out;
+}
+</style>
+</html>
